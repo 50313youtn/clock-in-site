@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>打卡人員列表</title>
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    #searchInput {
+      display: block;
+      margin: 0 auto 20px auto;
+      padding: 8px;
+      width: 300px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 90%;
+      margin: auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .special {
+      font-family: "Brush Script MT", cursive;
+      font-weight: bold;
+      color: #e67e22;
+    }
+  </style>
+</head>
+<body>
+
+<h1>打卡人員與打卡天數</h1>
+
+<input type="text" id="searchInput" placeholder="搜尋暱稱…">
+
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">序號</th>
+      <th onclick="sortTable(1)">暱稱</th>
+      <th onclick="sortTable(2)">打卡天數</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>A1</td><td>A龍</td><td>14</td></tr>
+    <tr><td>A2</td><td>變變變</td><td>22</td></tr>
+    <tr><td>A3</td><td>早安早安</td><td>3</td></tr>
+    <tr><td>A4</td><td>敵軍</td><td>5</td></tr>
+    <tr><td>A5</td><td>冰戀</td><td>10</td></tr>
+    <tr><td>A6</td><td>小鬼</td><td>2</td></tr>
+    <tr><td>A7</td><td>羽夢</td><td>29</td></tr>
+    <tr><td>A8</td><td>壹柒陸</td><td>6</td></tr>
+    <tr><td>A9</td><td>kirito</td><td>11</td></tr>
+    <tr><td>A10</td><td>奇文</td><td>16</td></tr>
+    <tr><td>A11</td><td>綾人</td><td>13</td></tr>
+    <tr><td>A12</td><td>貓貓</td><td>7</td></tr>
+    <tr><td>A13</td><td class="special">𝓑.𝓕𝓸𝔁</td><td>2</td></tr>
+    <tr><td>A14</td><td>小布丁</td><td>6</td></tr>
+    <tr><td>A15</td><td>Ii‿⁠in</td><td>10</td></tr>
+    <tr><td>A16</td><td>彩葉</td><td>34</td></tr>
+    <tr><td>A17</td><td class="special">𝓛𝓾𝓬𝓴𝔂餓了呀</td><td>9</td></tr>
+    <tr><td>A18</td><td>緯緯大帳</td><td>15</td></tr>
+    <tr><td>A19</td><td>落鯊</td><td>9</td></tr>
+    <tr><td>A20</td><td>困困</td><td>14</td></tr>
+    <tr><td>A21</td><td>夜娜</td><td>11</td></tr>
+  </tbody>
+</table>
+
+<script>
+  // 搜尋功能
+  document.getElementById("searchInput").addEventListener("keyup", function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+    rows.forEach(row => {
+      const name = row.cells[1].textContent.toLowerCase();
+      row.style.display = name.includes(filter) ? "" : "none";
+    });
+  });
+
+  // 排序功能
+  function sortTable(columnIndex) {
+    const table = document.getElementById("dataTable");
+    const rows = Array.from(table.rows).slice(1); // 去掉標題列
+    let switching = true;
+    let dir = "asc";
+    let switchcount = 0;
+
+    while (switching) {
+      switching = false;
+      for (let i = 1; i < rows.length - 1; i++) {
+        let x = rows[i].getElementsByTagName("TD")[columnIndex];
+        let y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+        let shouldSwitch = false;
+
+        let xContent = x.textContent || x.innerText;
+        let yContent = y.textContent || y.innerText;
+
+        if (columnIndex === 2) { // 如果是打卡天數欄，轉成數字比較
+          xContent = parseInt(xContent);
+          yContent = parseInt(yContent);
+        }
+
+        if ((dir === "asc" && xContent > yContent) || (dir === "desc" && xContent < yContent)) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;
+      } else {
+        if (switchcount === 0 && dir === "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
